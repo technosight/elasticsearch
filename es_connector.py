@@ -12,11 +12,13 @@ import hashlib
 
 from es_queries import ElasticsearchQueries
 
+# set config parameters
 cache_dir = Path('C:\tmp\pickle')
 cache_dir.mkdir(parents=True, exist_ok=True)
-
 caching_on = True
+request_timeout=30
 
+# initialise logger
 logger = logging.getLogger('elasticsearch_connector')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler = logging.StreamHandler()
@@ -186,7 +188,7 @@ class ElasticsearchConnector:
                 raise_on_error=True,
                 stats_only=True,
                 max_retries=3,
-                request_timeout=30
+                request_timeout=request_timeout
             )
             # TODO: consider an option to use parallel bulk
             # for success, info in parallel_bulk(lient=self.es, actions=docs):
@@ -293,7 +295,7 @@ class ElasticsearchConnector:
             doc_type=doc_type,
             preserve_order=True,
             query=query,
-            request_timeout=30
+            request_timeout=request_timeout
         )
         i = 0
         data_holder = []
