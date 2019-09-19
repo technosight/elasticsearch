@@ -22,7 +22,7 @@ request_timeout=30
 logger = logging.getLogger('elasticsearch_connector')
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 console_handler = logging.StreamHandler()
-# console_handler.setLevel(logging.DEBUG)
+console_handler.setLevel(logging.DEBUG)
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.setLevel(logging.DEBUG)
@@ -30,7 +30,7 @@ logger.setLevel(logging.DEBUG)
 
 def cacheable(method):
     '''
-    Decorates methods that benefit data caching
+    Allows decorated methods to use data caching
     :param method:
     :return:
     '''
@@ -98,7 +98,7 @@ class ElasticsearchConnector:
 
     def create_es_index(self, es_index_name, column_types):
         '''
-        Create new elasticsearch index.
+        Creates new elasticsearch index.
         :param es_index_name: str
         :param column_types: list
         :return: None
@@ -152,7 +152,7 @@ class ElasticsearchConnector:
 
     def put_df(self, es_index_name, doc_type, df, update=False):
         '''
-        Saves given dataframe in elasticsearch.
+        Stores given dataframe in elasticsearch.
         :param es_index_name: str
         :param doc_type: str
         :param df: pandas.DataFrame
@@ -172,11 +172,7 @@ class ElasticsearchConnector:
                 logger.error('failed to save df in es index: {}'.format(es_index_name))
                 return False
 
-            # check if the database
-            # TODO: the code below needs to be reviewed as it depends on given requirements
-            # TODO: use 'update' flag foor decision if existing rows would be updated or left intact
-
-            # save given dataframe
+            # store given dataframe
             logger.debug('inserting records into es index: {}'.format(es_index_name))
 
             docs = df.to_dict(orient='records')
@@ -190,7 +186,8 @@ class ElasticsearchConnector:
                 max_retries=3,
                 request_timeout=request_timeout
             )
-            # TODO: consider an option to use parallel bulk
+
+            # TODO: consider an option to use parallel bulk for storing large dataframes
             # for success, info in parallel_bulk(lient=self.es, actions=docs):
             #     # TODO: implement parallel_bulk
 
@@ -242,7 +239,7 @@ class ElasticsearchConnector:
             filters.append(
                 {
                     'range': {
-                        # 'timestamp' column must exist in given es index
+                        # NOTE: 'timestamp' column must exist in given es index
                         'timestamp': {
                             'gte': start_date,
                             'lte': end_date
