@@ -7,7 +7,7 @@ elasticsearch==7.0.2
 idna==2.8
 mkl-fft==1.0.12
 mkl-random==1.0.2
-numpy==1.16.4
+numpy==1.22.0
 pandas==0.24.2
 pycparser==2.19
 pyOpenSSL==19.0.0
